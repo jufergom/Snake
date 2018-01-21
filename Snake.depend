@@ -1,10 +1,9 @@
 # depslib dependency file v1.0
-1516245222 source:c:\programacion\proyectos\c++\snake\main.cpp
+1516518519 source:c:\programacion\proyectos\c++\snake\main.cpp
 	<SFML/Graphics.hpp>
 	<SFML/Audio.hpp>
 	<vector>
 	<iostream>
-	<stdlib.h>
 	"Snake.h"
 
 1486736397 c:\programacion\librerias\librerias c++\sfml-2.4.2\include\sfml\graphics.hpp
@@ -502,6 +501,6 @@
 	<SFML/Graphics.hpp>
 	<vector>
 
-1516244939 source:c:\programacion\proyectos\c++\snake\snake.cpp
+1516245401 source:c:\programacion\proyectos\c++\snake\snake.cpp
 	"Snake.h"
 
