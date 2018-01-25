@@ -58,7 +58,7 @@ void Snake::growUp() {
 }
 
 void Snake::killSnake() {
-    for(int i = 1; i < squares.size(); i++) {
+    for(int i = 2; i < squares.size(); i++) {
         if(squares[0].getGlobalBounds().contains(squares[i].getPosition().x, squares[i].getPosition().y))
             alive = false;
     }

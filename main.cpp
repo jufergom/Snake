@@ -54,9 +54,9 @@ int main()
     }
 
     Music gameplayMusic;
-    gameplayMusic.openFromFile("music/bonus_room.ogg");
+    gameplayMusic.openFromFile("music/Theme_for_Harold.ogg");
     gameplayMusic.setLoop(true);
-    gameplayMusic.setVolume(50);
+    gameplayMusic.setVolume(80);
 
     Music menuMusic;
     menuMusic.openFromFile("music/title_theme.ogg");
@@ -100,7 +100,7 @@ int main()
                 case 1: {
                     menuMusic.stop();
                     Snake snake;
-                    int timer = 0;
+                    int movementTimer = 0;
                     int xRandom, yRandom;
                     xRandom = numbersX[rand()%50+1];
                     yRandom = numbersY[rand()%30+1];
@@ -112,19 +112,19 @@ int main()
                                 window.close();
 
                             if(event.type == Event::KeyPressed) {
-                                if(event.key.code == Keyboard::A && snake.dx != 20) {
+                                if(event.key.code == Keyboard::Left && snake.dx != 20) {
                                     snake.dx = -20;
                                     snake.dy = 0;
                                 }
-                                if(event.key.code == Keyboard::D && snake.dx != -20) {
+                                if(event.key.code == Keyboard::Right && snake.dx != -20) {
                                     snake.dx = 20;
                                     snake.dy = 0;
                                 }
-                                if(event.key.code == Keyboard::W && snake.dy != 20) {
+                                if(event.key.code == Keyboard::Up && snake.dy != 20) {
                                     snake.dx = 0;
                                     snake.dy = -20;
                                 }
-                                if(event.key.code == Keyboard::S && snake.dy != -20) {
+                                if(event.key.code == Keyboard::Down && snake.dy != -20) {
                                     snake.dx = 0;
                                     snake.dy = 20;
                                 }
@@ -134,16 +134,22 @@ int main()
                                 }
                             }
                         }
-
+                        /*
+                        if(colisionTimer < 35 && colisionTimer != 0)
+                            colisionTimer++;
+                        if(colisionTimer == 35)
+                            colisionTimer = 0;
+                        */
                         //movimiento de la serpiente
-                        if(timer == 100) {
+                        if(movementTimer == 100) {
                             snake.moveSnake();
-                            timer = 0;
+                            movementTimer = 0;
+                            movementLimiter = 0;
                         }
-                        timer++;
+                        movementTimer++;
 
                         //ver si la serpiente ha comido algo
-                        if(snake.colisionFood(red) && timer == 1) {
+                        if(snake.colisionFood(red) && movementTimer == 1) {
                             snake.growUp();
                             xRandom = numbersX[rand()%50+1];
                             yRandom = numbersY[rand()%30+1];
