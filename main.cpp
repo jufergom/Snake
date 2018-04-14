@@ -15,6 +15,8 @@ void loadTextures();
 Sprite red;
 void loadSprites();
 
+void game(RenderWindow *window, int numbersX[], int numbersY[]);
+
 int main()
 {
     RenderWindow window(VideoMode(ANCHO, ALTO), "Snake by jufergom");
@@ -37,14 +39,17 @@ int main()
     texts[1].setString("Salir");
     texts[1].setPosition(500-30, 460);
 
+    //esto manejara si se quiere acceder a la opcion de jugar
     int option = 0;
 
     loadTextures();
     loadSprites();
 
+    //los posibles numeros aleatorios en donde puede salir la comida
     int numbersX[50];
     int numbersY[30];
 
+    //se asignan las posibles coordenadas en los arrays
     for(int i = 0; i < 50; i++) {
         numbersX[i] = 20*i;
     }
@@ -53,11 +58,7 @@ int main()
         numbersY[i] = 20*i;
     }
 
-    Music gameplayMusic;
-    gameplayMusic.openFromFile("music/Theme_for_Harold.ogg");
-    gameplayMusic.setLoop(true);
-    gameplayMusic.setVolume(80);
-
+    //musica del menu
     Music menuMusic;
     menuMusic.openFromFile("music/title_theme.ogg");
     menuMusic.setLoop(true);
@@ -75,6 +76,7 @@ int main()
         {
             if (event.type == Event::Closed)
                 window.close();
+            //cambio de color en las letras del menu
             for(int i = 0; i < 2; i++) {
                 if(texts[i].getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                     texts[i].setColor(Color::Blue);
@@ -95,83 +97,11 @@ int main()
                     }
                 }
             }
-
             switch(option) {
                 case 1: {
                     menuMusic.stop();
-                    Snake snake;
-                    int movementTimer = 0;
-                    int xRandom, yRandom;
-                    xRandom = numbersX[rand()%50+1];
-                    yRandom = numbersY[rand()%30+1];
-                    red.setPosition(xRandom, yRandom);
-                    gameplayMusic.play();
-                    while(option == 1 && window.isOpen()) {
-                        while (window.pollEvent(event)) {
-                            if (event.type == Event::Closed)
-                                window.close();
-
-                            if(event.type == Event::KeyPressed) {
-                                if(event.key.code == Keyboard::Left && snake.dx != 20) {
-                                    snake.dx = -20;
-                                    snake.dy = 0;
-                                }
-                                if(event.key.code == Keyboard::Right && snake.dx != -20) {
-                                    snake.dx = 20;
-                                    snake.dy = 0;
-                                }
-                                if(event.key.code == Keyboard::Up && snake.dy != 20) {
-                                    snake.dx = 0;
-                                    snake.dy = -20;
-                                }
-                                if(event.key.code == Keyboard::Down && snake.dy != -20) {
-                                    snake.dx = 0;
-                                    snake.dy = 20;
-                                }
-                                if(event.key.code == Keyboard::Escape) {
-                                    option = 0;
-                                    gameplayMusic.stop();
-                                }
-                            }
-                        }
-                        /*
-                        if(colisionTimer < 35 && colisionTimer != 0)
-                            colisionTimer++;
-                        if(colisionTimer == 35)
-                            colisionTimer = 0;
-                        */
-                        //movimiento de la serpiente
-                        if(movementTimer == 100) {
-                            snake.moveSnake();
-                            movementTimer = 0;
-                            movementLimiter = 0;
-                        }
-                        movementTimer++;
-
-                        //ver si la serpiente ha comido algo
-                        if(snake.colisionFood(red) && movementTimer == 1) {
-                            snake.growUp();
-                            xRandom = numbersX[rand()%50+1];
-                            yRandom = numbersY[rand()%30+1];
-                            red.setPosition(xRandom, yRandom);
-                        }
-
-                        //Revisar si la serpiente muere
-                        snake.killSnake();
-                        if(!snake.alive) {
-                            option = 0;
-                            gameplayMusic.stop();
-                        }
-
-                        //dibujar cosas en el window
-                        window.clear();
-                        for(int i = 0; i < snake.squares.size(); i++) {
-                            window.draw(snake.squares[i]);
-                        }
-                        window.draw(red);
-                        window.display();
-                        }
-                    }
+                    game(&window, numbersX, numbersY);
+                    option = 0;
                     break;
                 }
             }
@@ -180,6 +110,7 @@ int main()
         for(int i = 0; i < 2; i++)
             window.draw(texts[i]);
         window.display();
+        }
     }
     return 0;
 }
@@ -190,4 +121,83 @@ void loadTextures() {
 
 void loadSprites() {
     red.setTexture(t2);
+}
+
+void game(RenderWindow *window, int numbersX[], int numbersY[]) {
+    Event event;
+    Snake snake;
+    int movementTimer = 0;
+    int xRandom, yRandom;
+    xRandom = numbersX[rand()%50+1];
+    yRandom = numbersY[rand()%30+1];
+    red.setPosition(xRandom, yRandom);
+    //ponemos la musica
+    Music gameplayMusic;
+    gameplayMusic.openFromFile("music/Theme_for_Harold.ogg");
+    gameplayMusic.setLoop(true);
+    gameplayMusic.setVolume(80);
+    gameplayMusic.play();
+    while(window->isOpen()) {
+        while (window->pollEvent(event)) {
+            if (event.type == Event::Closed)
+                window->close();
+            if(event.type == Event::KeyPressed) {
+                if(event.key.code == Keyboard::Left && snake.dx != 20) {
+                    snake.dx = -20;
+                    snake.dy = 0;
+                }
+                if(event.key.code == Keyboard::Right && snake.dx != -20) {
+                    snake.dx = 20;
+                    snake.dy = 0;
+                }
+                if(event.key.code == Keyboard::Up && snake.dy != 20) {
+                    snake.dx = 0;
+                    snake.dy = -20;
+                }
+                if(event.key.code == Keyboard::Down && snake.dy != -20) {
+                    snake.dx = 0;
+                    snake.dy = 20;
+                }
+                if(event.key.code == Keyboard::Escape) {
+                    gameplayMusic.stop();
+                    return;
+                }
+            }
+        }
+        /*
+        if(colisionTimer < 35 && colisionTimer != 0)
+            colisionTimer++;
+        if(colisionTimer == 35)
+            colisionTimer = 0;
+            */
+        //movimiento de la serpiente
+        if(movementTimer == 80) {
+            snake.moveSnake();
+            movementTimer = 0;
+            }
+        movementTimer++;
+
+        //ver si la serpiente ha comido algo
+        if(snake.colisionFood(red) && movementTimer == 1) {
+            snake.growUp();
+            xRandom = numbersX[rand()%50+1];
+            yRandom = numbersY[rand()%30+1];
+            red.setPosition(xRandom, yRandom);
+        }
+
+        //Revisar si la serpiente muere
+        snake.killSnake();
+        if(!snake.alive) {
+            gameplayMusic.stop();
+            return;
+        }
+
+        //dibujar cosas en el window
+        window->clear();
+        for(int i = 0; i < snake.squares.size(); i++) {
+            window->draw(snake.squares[i]);
+        }
+        window->draw(red);
+        window->display();
+    }
 }

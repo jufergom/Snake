@@ -26,13 +26,13 @@ void Snake::moveSnake() {
     if(squares[0].getPosition().x < 0) {
         squares[0].setPosition(ANCHO ,squares[0].getPosition().y);
     }
-    else if(squares[0].getPosition().x > ANCHO) {
+    else if(squares[0].getPosition().x >= ANCHO) {
         squares[0].setPosition(0 ,squares[0].getPosition().y);
     }
     else if(squares[0].getPosition().y < 0) {
         squares[0].setPosition(squares[0].getPosition().x ,ALTO);
     }
-    else if(squares[0].getPosition().y > ALTO) {
+    else if(squares[0].getPosition().y >= ALTO) {
         squares[0].setPosition(squares[0].getPosition().x ,0);
     }
 
